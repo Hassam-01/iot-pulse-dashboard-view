@@ -46,10 +46,11 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const data = await response.json();
       setDeviceData(data);
       
-      // Extract unique device IDs
+      // Extract unique device IDs with proper type assertion
       const uniqueDevices = Array.from(
         new Set(data.map((item: DeviceData) => item.deviceId))
-      );
+      ) as string[];
+      
       setDevices(uniqueDevices);
       
       setError(null);
