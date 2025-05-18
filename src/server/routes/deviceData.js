@@ -1,7 +1,7 @@
 
-const express = require('express');
-const router = express.Router();
-const DeviceData = require('../models/DeviceData');
+import { Router } from 'express';
+const router = Router();
+import DeviceData from '../models/DeviceData.js';
 
 // POST /api/data - Add new device data
 router.post('/', async (req, res) => {
@@ -94,4 +94,4 @@ router.get('/history/:deviceId', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

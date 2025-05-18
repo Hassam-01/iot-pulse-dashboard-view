@@ -1,8 +1,8 @@
 
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 // Define the schema for device data
-const DeviceDataSchema = new mongoose.Schema({
+const DeviceDataSchema = new Schema({
   deviceId: {
     type: String,
     required: true,
@@ -26,6 +26,6 @@ const DeviceDataSchema = new mongoose.Schema({
 DeviceDataSchema.index({ deviceId: 1, timestamp: -1 });
 
 // Create and export the model
-const DeviceData = mongoose.model('DeviceData', DeviceDataSchema);
+const DeviceData = model('DeviceData', DeviceDataSchema);
 
-module.exports = DeviceData;
+export default DeviceData;

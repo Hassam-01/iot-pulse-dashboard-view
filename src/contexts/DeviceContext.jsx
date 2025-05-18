@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+import { api } from "../services/api";
 
 const DeviceContext = createContext(undefined);
 
@@ -13,45 +14,30 @@ export const DeviceProvider = ({ children }) => {
 
   // Function to fetch latest data
   const refreshData = async () => {
-    try {
-      const endpoint = selectedDevice 
-        ? `/api/data/latest/${selectedDevice}` 
-        : "/api/data/latest";
-        
-      const response = await fetch(endpoint);
-      
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setDeviceData(data);
-      
-      // Extract unique device IDs
-      const uniqueDevices = Array.from(
-        new Set(data.map(item => item.deviceId))
-      );
-      
-      setDevices(uniqueDevices);
-      
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching device data:", err);
-      setError("Failed to load device data. Please try again later.");
-      toast({
-        title: "Error fetching data",
-        description: "Could not retrieve device data from server",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const data = await api.getLatestData(selectedDevice);
+    setDeviceData(data);
 
+    const uniqueDevices = Array.from(new Set(data.map(item => item.deviceId)));
+    setDevices(uniqueDevices);
+
+    setError(null);
+  } catch (err) {
+    console.error("Error fetching device data:", err);
+    setError("Failed to load device data. Please try again later.");
+    toast({
+      title: "Error fetching data",
+      description: "Could not retrieve device data from server",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
   // Function to add new data 
   const addData = async (data) => {
     try {
-      const response = await fetch("/api/data", {
+      const response = await fetch(`http://localhost:5000/api/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

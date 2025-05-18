@@ -2,18 +2,19 @@
 import { toast } from "@/hooks/use-toast";
 
 // Base URL can be changed based on environment
-const API_BASE_URL = "/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 export const api = {
   // Fetch latest data for all devices or a specific device
   getLatestData: async (deviceId) => {
     try {
-      const endpoint = deviceId 
+      const endpoint = deviceId
         ? `${API_BASE_URL}/data/latest/${deviceId}` 
         : `${API_BASE_URL}/data/latest`;
-      
+      // const endpoint = "/api/data/latest";
+      console.log("Fetching data from:", endpoint);
       const response = await fetch(endpoint);
-      
+
       if (!response.ok) {
         throw new Error(`API Error: ${response.status}`);
       }

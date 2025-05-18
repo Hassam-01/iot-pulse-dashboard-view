@@ -1,10 +1,12 @@
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import { connect } from 'mongoose';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // MongoDB connection URI
 const MONGODB_URI = 'mongodb+srv://alihassam1:JgfXZHLnio1Jp10s@cluster0.cyicnky.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
@@ -18,7 +20,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect(MONGODB_URI)
+connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => {
     console.error('Error connecting to MongoDB:', err);
@@ -26,7 +28,7 @@ mongoose.connect(MONGODB_URI)
   });
 
 // Import routes
-const deviceDataRoutes = require('./routes/deviceData');
+import deviceDataRoutes from './routes/deviceData.js';
 
 // Setup routes
 app.use('/api/data', deviceDataRoutes);
@@ -45,4 +47,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-module.exports = app;
+export default app;
