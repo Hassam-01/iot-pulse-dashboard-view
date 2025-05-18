@@ -1,5 +1,5 @@
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 // Define the schema for device data
 const DeviceDataSchema = new mongoose.Schema({
@@ -26,4 +26,6 @@ const DeviceDataSchema = new mongoose.Schema({
 DeviceDataSchema.index({ deviceId: 1, timestamp: -1 });
 
 // Create and export the model
-export const DeviceData = mongoose.model('DeviceData', DeviceDataSchema);
+const DeviceData = mongoose.model('DeviceData', DeviceDataSchema);
+
+module.exports = DeviceData;

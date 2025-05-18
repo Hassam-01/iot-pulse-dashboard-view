@@ -1,18 +1,12 @@
 
 import { toast } from "@/hooks/use-toast";
 
-interface DeviceData {
-  deviceId: string;
-  temperature: number;
-  humidity: number;
-}
-
 // Base URL can be changed based on environment
 const API_BASE_URL = "/api";
 
 export const api = {
   // Fetch latest data for all devices or a specific device
-  getLatestData: async (deviceId?: string) => {
+  getLatestData: async (deviceId) => {
     try {
       const endpoint = deviceId 
         ? `${API_BASE_URL}/data/latest/${deviceId}` 
@@ -37,7 +31,7 @@ export const api = {
   },
 
   // Post new device data
-  addDeviceData: async (data: DeviceData) => {
+  addDeviceData: async (data) => {
     try {
       const response = await fetch(`${API_BASE_URL}/data`, {
         method: "POST",
@@ -70,7 +64,7 @@ export const api = {
   },
   
   // Get historical data for a specific device
-  getDeviceHistory: async (deviceId: string, limit: number = 20) => {
+  getDeviceHistory: async (deviceId, limit = 20) => {
     try {
       const response = await fetch(`${API_BASE_URL}/data/history/${deviceId}?limit=${limit}`);
       

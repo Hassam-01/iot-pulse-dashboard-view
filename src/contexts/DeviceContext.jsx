@@ -2,33 +2,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 
-interface DeviceData {
-  _id?: string;
-  deviceId: string;
-  temperature: number;
-  humidity: number;
-  timestamp?: string;
-}
+const DeviceContext = createContext(undefined);
 
-interface DeviceContextType {
-  devices: string[];
-  deviceData: DeviceData[];
-  loading: boolean;
-  error: string | null;
-  selectedDevice: string | null;
-  setSelectedDevice: (deviceId: string | null) => void;
-  refreshData: () => Promise<void>;
-  addData: (data: DeviceData) => Promise<void>;
-}
-
-const DeviceContext = createContext<DeviceContextType | undefined>(undefined);
-
-export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [devices, setDevices] = useState<string[]>([]);
-  const [deviceData, setDeviceData] = useState<DeviceData[]>([]);
+export const DeviceProvider = ({ children }) => {
+  const [devices, setDevices] = useState([]);
+  const [deviceData, setDeviceData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [error, setError] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   // Function to fetch latest data
   const refreshData = async () => {
@@ -46,10 +27,10 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const data = await response.json();
       setDeviceData(data);
       
-      // Extract unique device IDs with proper type assertion
+      // Extract unique device IDs
       const uniqueDevices = Array.from(
-        new Set(data.map((item: DeviceData) => item.deviceId))
-      ) as string[];
+        new Set(data.map(item => item.deviceId))
+      );
       
       setDevices(uniqueDevices);
       
@@ -68,7 +49,7 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // Function to add new data 
-  const addData = async (data: DeviceData) => {
+  const addData = async (data) => {
     try {
       const response = await fetch("/api/data", {
         method: "POST",
@@ -112,7 +93,7 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [selectedDevice]);
 
-  const contextValue: DeviceContextType = {
+  const contextValue = {
     devices,
     deviceData,
     loading,
@@ -130,7 +111,7 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   );
 };
 
-export const useDeviceData = (): DeviceContextType => {
+export const useDeviceData = () => {
   const context = useContext(DeviceContext);
   if (context === undefined) {
     throw new Error("useDeviceData must be used within a DeviceProvider");

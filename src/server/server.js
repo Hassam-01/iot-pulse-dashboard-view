@@ -1,12 +1,10 @@
 
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
-import { createDeviceDataRouter } from './routes/deviceData';
-
-dotenv.config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
+require('dotenv').config();
 
 // MongoDB connection URI
 const MONGODB_URI = 'mongodb+srv://alihassam1:JgfXZHLnio1Jp10s@cluster0.cyicnky.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
@@ -27,12 +25,14 @@ mongoose.connect(MONGODB_URI)
     process.exit(1);
   });
 
+// Import routes
+const deviceDataRoutes = require('./routes/deviceData');
+
 // Setup routes
-const deviceDataRouter = createDeviceDataRouter();
-app.use('/api/data', deviceDataRouter);
+app.use('/api/data', deviceDataRoutes);
 
 // Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     message: 'Something went wrong!',
@@ -45,4 +45,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-export default app;
+module.exports = app;
